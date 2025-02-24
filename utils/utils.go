@@ -20,7 +20,21 @@ func WrapHandler(fn func(*gin.Context) interface{}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		began := time.Now()
 		ret := fn(c)
+		if ret == nil {
+			ret = map[string]interface{}{
+				"error":   "empty response",
+				"message": "no data returned from handler",
+			}
+		}
+
 		status, res := Result2HttpJSON(ret)
+		if res == nil {
+			res = map[string]interface{}{
+				"error":   "internal server error",
+				"message": "response data is nil",
+			}
+			status = http.StatusInternalServerError
+		}
 
 		b, _ := json.Marshal(res)
 		if status == http.StatusOK || status == http.StatusTooEarly {
@@ -28,6 +42,7 @@ func WrapHandler(fn func(*gin.Context) interface{}) gin.HandlerFunc {
 		} else {
 			PrintInfof("%2dms %d %s %s %s", time.Since(began).Milliseconds(), status, c.Request.Method, c.Request.RequestURI, string(b))
 		}
+
 		c.JSON(status, res)
 	}
 }
