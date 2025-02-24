@@ -46,7 +46,7 @@ func LoggingMiddleware() gin.HandlerFunc {
 		} else {
 			// 본문을 복원하여 이후 핸들러에서도 읽을 수 있도록 합니다.
 			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bodyBytes))
-			utils.PrintInfof("REQUEST: [%s] %s | Body: %s", c.Request.Method, c.Request.RequestURI, string(bodyBytes))
+			utils.PrintInfof("<- REQUEST: [%s] %s | Body: %s", c.Request.Method, c.Request.RequestURI, string(bodyBytes))
 		}
 		// 다음 핸들러로 제어를 넘깁니다.
 		c.Next()

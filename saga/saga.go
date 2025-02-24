@@ -46,7 +46,7 @@ func (s *Saga) Validate() error {
 }
 
 func (s *Saga) Run() error {
-	utils.PrintInfof("Starting request")
+	utils.PrintInfof("========== Starting request ==========")
 
 	for idx, req := range s.Requests {
 		for url, body := range req {
